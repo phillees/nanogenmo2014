@@ -1,5 +1,19 @@
 <?php
 
+class Flickr { 
+	private $apiKey = 'YOUR_API_KEY_GOES_HERE'; 
+ 
+	public function __construct() {
+	} 
+ 
+	public function search($query = null) { 
+		$search = 'http://flickr.com/services/rest/?method=flickr.photos.search&api_key=' . $this->apiKey . '&text=' . urlencode($query) . '&per_page=1&format=php_serial&license=1%2C2%2C3%2C4%2C5%2C6'; 
+		$result = file_get_contents($search); 
+		$result = unserialize($result); 
+		return $result; 
+	} 
+ }
+
 print "<h1>700 Modernist Cuisine Recipes</h1>";
 
 $i = 1;
@@ -144,6 +158,23 @@ $finish1=$finish[$num24];
 $n25=count($formit);
 $num25=rand(0, ($n25-1));
 $formit1=$formit[$num25];
+
+$flickrsearch="";
+$flickrsearch.=$text2;
+$flickrsearch.=" ";
+$flickrsearch.="microscope";
+
+  
+$Flickr = new Flickr; 
+$data = $Flickr->search($flickrsearch); 
+foreach($data['photos']['photo'] as $photo) { 
+	// the image URL becomes somthing like 
+	// http://farm{farm-id}.static.flickr.com/{server-id}/{id}_{secret}.jpg  
+	echo '<a href="http://www.flickr.com/photos/' . $photo["owner"] . '/' . $photo["id"] . '/" target="_blank" rel="nofollow"><img align="center" border="0" src="http://farm' . $photo["farm"] . '.static.flickr.com/' . $photo["server"] . '/' . $photo["id"] . '_' . $photo["secret"] . '.jpg" width="600" /></a>'; 
+
+
+}
+
 
 print "<h1>$text";
 print " ";
